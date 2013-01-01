@@ -11,8 +11,8 @@ Feature: Chat Feature
     Then I pree back button to close Joyn UI
     Then I take a screenshot in the second Device
 
-    When I see the contact '<CHAT_CONTACT_FOR_DEVICE2>' in joyn contacts list of the first device
-    Then I select the contact '<CHAT_CONTACT_FOR_DEVICE2' in joyn contacts list
+    When I see the contact 'TestDevice2' in joyn contacts list of the first device
+    Then I select the contact 'TestDevice2' in joyn contacts list
     Then I start to chat with the message 'first joyn chat message'
     Then I take a screenshot in the first Device 
  
