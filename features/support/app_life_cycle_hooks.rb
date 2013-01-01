@@ -4,6 +4,7 @@ include Calabash::Android::Operations
 
 Before do |scenario|
   start_test_server_in_background
+      $startTime = Time.now.to_f
 end
 
 After do |scenario|

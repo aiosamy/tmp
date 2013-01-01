@@ -1,6 +1,5 @@
 Given /^joyn app is running on the First Device$/ do
 $device=1
-    $startTime = Time.now.to_f
       performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
