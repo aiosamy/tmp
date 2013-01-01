@@ -1,9 +1,10 @@
 Given /^joyn app is running on the First Device$/ do
 $device=1
+setKPIIdentifier() 
       performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the fist device: time="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the fist device;opco="+$opco1_str+";imsi="+$imsi1_str+"; time="+elapsedTime.to_s+"s"
 end
 
 Then /^I delete the chat history in the first Device$/ do
@@ -23,12 +24,13 @@ And /^also in Second Device joyn app is running$/ do
 $device=2
 uninstall_apps
 install_app(ENV["TEST_APP_PATH"])
+setKPIIdentifier()
 $startTime = Time.now.to_f
 start_test_server_in_background
         performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the second device: time="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the second device;opco="+$opco2_str+";imsi="+$imsi2_str+" time="+elapsedTime.to_s+"s"
 end
 
 
@@ -74,6 +76,7 @@ performAction('wait_for_view_by_id','chat_composer')
 performAction('enter_text_into_id_field',message1,'chat_composer')
 performAction('wait_for_view_by_id','chat_send_button')
 performAction('click_on_view_by_id','chat_send_button')
+setKPIIdentifier()
 $startTime = Time.now.to_f
 end
 
@@ -91,7 +94,7 @@ count = count + 1
 end 
 end
   elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;Notification msg|Time elapsed between send msg in first device and received notification in second; time ="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;Notification msg|Time elapsed between send msg in first device and received notification in second;opco="+$opco2_str+";imsi="+$imsi2_str+" time ="+elapsedTime.to_s+"s"
 end
 
 Then /^I take a screenshot in the second Device$/ do
@@ -115,6 +118,7 @@ $device=2
 performAction('enter_text_into_id_field',message3,'chat_composer')
 performAction('wait_for_view_by_id','chat_send_button')
 performAction('click_on_view_by_id','chat_send_button')
+setKPIIdentifier()
 $startTime = Time.now.to_f
 end
 
@@ -123,7 +127,7 @@ Then /^I wait to see message '(.*)' in the first device$/ do |message4|
 $device=1
 performAction('wait_for_text', message4)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;Message recived|Time elapsed between send msg in second device and received it in first; time ="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;Message recived|Time elapsed between send msg in second device and received it in first;opco="+$opco1_str+";imsi="+$imsi1_str+"; time ="+elapsedTime.to_s+"s"
 performAction('assert_text',message4, true)
 end
 
@@ -142,3 +146,38 @@ def waitTillViewIsShown(viewId, timeOut)
     return false
 end
 
+def setKPIIdentifier()
+    result = performAction('get_imsi')
+    imsi = result["bonusInformation"].to_s
+    imsi = imsi.gsub!(/^\[|\"|\]/, '')
+    if $device == 1 then
+        $opco1_str = getOpco(imsi)
+        $imsi1_str = imsi
+    elsif $device == 2 then
+        $opco2_str = getOpco(imsi)
+        $imsi2_str = imsi
+    end
+end
+
+def getOpco(imsi)
+    case imsi[0,3]
+        when '262'
+            return 'de'
+        when '268'
+            return 'pt'
+        when '222'
+            return 'it'
+        when '204'
+            return 'nl'
+        when '214'
+            return 'es'
+        when '234' || '235'
+            return 'gb'
+        when '272'
+            return 'ir'
+        when '202'
+            return 'gr'
+        else
+            return 'no_opco'
+    end
+end
