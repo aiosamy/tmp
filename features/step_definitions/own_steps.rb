@@ -117,13 +117,11 @@ performAction('enter_text_into_id_field',message3,'chat_composer')
 performAction('wait_for_view_by_id','chat_send_button')
 performAction('click_on_view_by_id','chat_send_button')
 $startTime = Time.now.to_f
-sleep 5
 end
 
 
 Then /^I wait to see message '(.*)' in the first device$/ do |message4|
 $device=1
-startTime = Time.now.to_f
 performAction('wait_for_text', message4)
     elapsedTime = Time.now.to_f - $startTime
    puts "KPI-For-Nagios: joyn;Message recived|Time elapsed between send msg in second device and received it in first; time ="+elapsedTime.to_s+"s"
