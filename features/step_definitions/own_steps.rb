@@ -1,4 +1,4 @@
-Given /^joyn app is running on the First Device$/ do
+Given /^joyn app is running on the first device$/ do
 $device=1
 setKPIIdentifier() 
       performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
@@ -7,7 +7,7 @@ setKPIIdentifier()
    puts "KPI-For-Nagios: joyn;Startup|Startup time for app till the joyn contacts being displayed in the first device;opco="+$opco1_str+";imsi="+$imsi1_str+"; time="+elapsedTime.to_s+"s"
 end
 
-Then /^I delete the chat history in the first Device$/ do
+Then /^I cleanup the chat history with the contact '(.*)' in the first device$/ do |device2|
 $device=1
 performAction('wait_for_view_by_id','contacts_toggle_filter_txtview')
 performAction('select_from_menu', 'Delete all messages')
@@ -20,7 +20,7 @@ begin
      end while ( current != 'joyn contacts' ) and performAction('click_on_view_by_id','contacts_toggle_filter_btn')
 end
 
-Then /^I take a screenshot in the first Device$/ do
+Then /^I take a screenshot in the first device$/ do
 $device=1
 screenshot_embed
 end
@@ -39,7 +39,7 @@ setKPIIdentifier()
 end
 
 
-Then /^I delete the chat history in the second Device$/ do
+Then /^I cleanup the chat history with the contact '(.*)' in the second device$/ do |device1|
 $device=2
 performAction('wait_for_view_by_id','contacts_toggle_filter_txtview')
 performAction('select_from_menu', 'Delete all messages')
@@ -52,12 +52,12 @@ performAction('click_on_text', 'Yes')
      end while ( current != 'joyn contacts' ) and performAction('click_on_view_by_id','contacts_toggle_filter_btn')
 end
 
-And /^I take a screenshot in the Second Device$/ do
+And /^I take a screenshot in the second Device$/ do
 $device=2
 screenshot_embed
 end
 
-Then /^I put the Joyn app in background$/ do
+Then /^I put the Joyn app in background in the second device$/ do
 $device=2 
 performAction('go_back')
 # clearing notification event log in device 2
@@ -73,15 +73,11 @@ end
 #performAction('wait_for_text', device2)
 end
 
-Then /^I select the contact '(.*)' in joyn contacts list$/ do |device2|
+Then /^I send a chat message '(.*)' to the contact '(.*)' in joyn contacts list$/ do |message1,device2|
 $device=1
 performAction('click_on_text', device2)
 performAction('wait_for_view_by_id','contactcard_entry_text2')
 performAction('click_on_view_by_id','contactcard_entry_text2')
-end
-
-Then /^I start to chat with the message '(.*)'$/ do |message1|
-$device=1
 performAction('wait_for_view_by_id','chat_composer')
 performAction('enter_text_into_id_field',message1,'chat_composer')
 performAction('wait_for_view_by_id','chat_send_button')
@@ -90,7 +86,7 @@ setKPIIdentifier()
 $startTime = Time.now.to_f
 end
 
-When /^I see the Joyn Notification message in Second Device$/ do
+When /^I wait to see the Joyn Chat Notification message in the second device$/ do
 $device=2
 count = 1
 value =""
@@ -107,23 +103,23 @@ end
    puts "KPI-For-Nagios: Joyn notification message|Time elapsed between send msg in first device and received notification in second;opco="+$opco2_str+";imsi="+$imsi2_str+"; time ="+elapsedTime.to_s+"s"
 end
 
-Then /^I take a screenshot in the second Device$/ do
+Then /^I take a screenshot in the second device$/ do
 $device=2
 screenshot_embed
 end
 
-When /^I open the notification message$/ do
+When /^I open the notification message to read the chat message in the second device$/ do
 $device=2
 system 'monkeyrunner Notification.py TestDevice1 $ADB_DEVICE_ARG2'
 end
 
-Then /^I see the message '(.*)' from first device$/ do |message2|
+Then /^I should see the message '(.*)' in the second device$/ do |message2|
 $device=2
 performAction('wait_for_text', message2)
 performAction('assert_text',message2, true)
 end
 
-Then /^I send '(.*)'as a reply to first device$/ do |message3|
+Then /^I send '(.*)'as a response in the second device$/ do |message3|
 $device=2
 performAction('enter_text_into_id_field',message3,'chat_composer')
 performAction('wait_for_view_by_id','chat_send_button')
