@@ -57,7 +57,7 @@ $device=2
 screenshot_embed
 end
 
-Then /^I pree back button to close Joyn UI$/ do
+Then /^I put the Joyn app in background$/ do
 $device=2 
 performAction('go_back')
 # clearing notification event log in device 2

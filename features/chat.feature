@@ -8,7 +8,7 @@ Feature: Chat Feature
     And also in Second Device joyn app is running
     Then I delete the chat history in the second Device
     And I take a screenshot in the Second Device
-    Then I pree back button to close Joyn UI
+    Then I put the Joyn app in background
     Then I take a screenshot in the second Device
 
     When I see the contact 'TestDevice2' in joyn contacts list of the first device
