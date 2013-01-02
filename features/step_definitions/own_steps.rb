@@ -4,15 +4,20 @@ setKPIIdentifier()
       performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the fist device;opco="+$opco1_str+";imsi="+$imsi1_str+"; time="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;Startup|Startup time for app till the joyn contacts being displayed in the first device;opco="+$opco1_str+";imsi="+$imsi1_str+"; time="+elapsedTime.to_s+"s"
 end
 
 Then /^I delete the chat history in the first Device$/ do
 $device=1
-performAction('wait_for_view_by_id','contact_row_name')
+performAction('wait_for_view_by_id','contacts_toggle_filter_txtview')
 performAction('select_from_menu', 'Delete all messages')
 performAction('wait_for_text', 'Yes')
 performAction('click_on_text', 'Yes')
+begin
+        r = performAction('read_text_for_view_by_id','contacts_toggle_filter_txtview')
+        current = r["bonusInformation"].to_s
+ current = current.gsub!(/^\[|\"|\]/, '')
+     end while ( current != 'joyn contacts' ) and performAction('click_on_view_by_id','contacts_toggle_filter_btn')
 end
 
 Then /^I take a screenshot in the first Device$/ do
@@ -30,16 +35,21 @@ setKPIIdentifier()
         performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;startup|Startup time for app till the joyn contacts being displayed in the second device;opco="+$opco2_str+";imsi="+$imsi2_str+" time="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: joyn;Startup|Startup time for app till the joyn contacts being displayed in the second device;opco="+$opco2_str+";imsi="+$imsi2_str+"; time="+elapsedTime.to_s+"s"
 end
 
 
 Then /^I delete the chat history in the second Device$/ do
 $device=2
-performAction('wait_for_view_by_id','contact_row_name')
+performAction('wait_for_view_by_id','contacts_toggle_filter_txtview')
 performAction('select_from_menu', 'Delete all messages')
 performAction('wait_for_text', 'Yes')
 performAction('click_on_text', 'Yes')
+ begin
+        r = performAction('read_text_for_view_by_id','contacts_toggle_filter_txtview')
+        current = r["bonusInformation"].to_s
+ current = current.gsub!(/^\[|\"|\]/, '')
+     end while ( current != 'joyn contacts' ) and performAction('click_on_view_by_id','contacts_toggle_filter_btn')
 end
 
 And /^I take a screenshot in the Second Device$/ do
@@ -94,7 +104,7 @@ count = count + 1
 end 
 end
   elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;Notification msg|Time elapsed between send msg in first device and received notification in second;opco="+$opco2_str+";imsi="+$imsi2_str+" time ="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: Joyn notification message|Time elapsed between send msg in first device and received notification in second;opco="+$opco2_str+";imsi="+$imsi2_str+"; time ="+elapsedTime.to_s+"s"
 end
 
 Then /^I take a screenshot in the second Device$/ do
@@ -127,12 +137,11 @@ Then /^I wait to see message '(.*)' in the first device$/ do |message4|
 $device=1
 performAction('wait_for_text', message4)
     elapsedTime = Time.now.to_f - $startTime
-   puts "KPI-For-Nagios: joyn;Message recived|Time elapsed between send msg in second device and received it in first;opco="+$opco1_str+";imsi="+$imsi1_str+"; time ="+elapsedTime.to_s+"s"
+   puts "KPI-For-Nagios: Joyn message recived|Time elapsed between send msg in second device and received it in first;opco="+$opco1_str+";imsi="+$imsi1_str+"; time ="+elapsedTime.to_s+"s"
 performAction('assert_text',message4, true)
 end
 
 def waitTillViewIsShown(viewId, timeOut)
-    puts "Wait on device: " + $device.to_s
     endTime = Time.now.to_f + timeOut.to_f
     begin
         r = performAction('read_visibility_for_view_by_id', viewId)
