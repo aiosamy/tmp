@@ -24,9 +24,9 @@ And /^also in Second Device joyn app is running$/ do
 $device=2
 uninstall_apps
 install_app(ENV["TEST_APP_PATH"])
-setKPIIdentifier()
 $startTime = Time.now.to_f
 start_test_server_in_background
+setKPIIdentifier()
         performAction('wait_for_view_by_id','contacts_toggle_filter_txtview', true)
      waitTillViewIsShown('contacts_toggle_filter_txtview', 120)
     elapsedTime = Time.now.to_f - $startTime
