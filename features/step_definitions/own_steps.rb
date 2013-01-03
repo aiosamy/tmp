@@ -90,7 +90,8 @@ while  (value == "")
 value=`adb -s $ADB_DEVICE_ARG2 logcat -b events -d  -v threadtime |grep com.summit.beam |grep notification_enqueue |grep flags=0x10`
 sleep(1.0/5.0)
 if count == 100
-performAction('wait_for_text', "Android Notification for Joyn message",1)
+puts 'Joyn notification did not received in 20 seconds'
+performAction('time_out_exit',1)
 else
 count = count + 1
 end 
