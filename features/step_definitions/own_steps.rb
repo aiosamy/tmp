@@ -63,10 +63,10 @@ end
 
 When /^I see the contact '(.*)' in joyn contacts list of the first device$/ do |device2|
 $device=1
-while  (true == performAction('assert_text',device2,true))
-performAction('scroll_down')
-end
-#performAction('wait_for_text', device2)
+#while  (true == performAction('assert_text',device2,true))
+#performAction('scroll_down')
+#end
+performAction('wait_for_text', device2)
 end
 
 Then /^I send a chat message '(.*)' to the contact '(.*)'$/ do |message1,device2|
